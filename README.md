@@ -1,1 +1,1 @@
-# STGL
+# ThermalGen
