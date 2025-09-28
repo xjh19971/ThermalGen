@@ -181,6 +181,47 @@
     </div>
 </section>
 
+<section class="section">
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-four-fifths">
+      <h2 class="title is-3">Thermal Map Generation Across CFG Scales</h2>
+      <div class="content has-text-justified">
+        <p>
+          Our model generates thermal maps from satellite imagery. 
+          By leveraging the style-disentangled generative framework, the CFG scale can be tuned to modulate the style and appearance of the synthesized thermal maps.
+        </p>
+      </div>
+
+      <!-- Example outputs at different CFG scales -->
+       <figure>
+        <img id="sat_1" src="assets/20201117_ESRI_Satellite.png" width="1000" alt="Thermal map generated with CFG 1.0">
+        <figcaption>Satellite Maps</figcaption>
+      </figure>
+      <figure>
+        <img id="tgm_1" src="assets/cfg_1.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 1.0">
+        <figcaption>No CFG</figcaption>
+      </figure>
+      <figure>
+        <img id="tgm_2" src="assets/cfg_2.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 2.0">
+        <figcaption>CFG = 2.0</figcaption>
+      </figure>
+      <figure>
+        <img id="tgm_3" src="assets/cfg_4.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 4.0">
+        <figcaption>CFG = 4.0</figcaption>
+      </figure>
+      <figure>
+        <img id="tgm_4" src="assets/cfg_8.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 8.0">
+        <figcaption>CFG = 8.0</figcaption>
+      </figure>
+      <figure>
+        <img id="tgm_5" src="assets/cfg_16.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 16.0">
+        <figcaption>CFG = 16.0</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+
 <!-- <section class="section">
   <div class="columns is-centered has-text-centered">
     <div class="column is-four-fifths">
