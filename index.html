@@ -272,28 +272,71 @@
       </div>
 
       <!-- Example outputs at different CFG scales -->
-       <figure>
-        <img id="sat_1" src="assets/20201117_ESRI_Satellite.png" width="1000" alt="Satellite" loading="lazy">
+      <style>
+        figure {
+          margin: 0 0 1.5rem 0;
+        }
+
+        img.responsive-img {
+          width: 100%;
+          height: auto;
+          max-width: 600px;   /* Prevent loading extremely large images on mobile layout */
+          display: block;
+          margin: auto;
+        }
+
+        figcaption {
+          text-align: center;
+          font-size: 0.9rem;
+          color: #666;
+        }
+      </style>
+
+      <figure>
+        <img class="responsive-img" 
+            src="assets/20201117_ESRI_Satellite.png" 
+            alt="Satellite" 
+            loading="lazy">
         <figcaption>Satellite Map</figcaption>
       </figure>
+
       <figure>
-        <img id="tgm_1" src="assets/cfg_1.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 1.0" loading="lazy">
+        <img class="responsive-img" 
+            src="assets/cfg_1.0_satellite_1_generated.png" 
+            alt="Thermal map generated with CFG 1.0" 
+            loading="lazy">
         <figcaption>No CFG</figcaption>
       </figure>
+
       <figure>
-        <img id="tgm_2" src="assets/cfg_2.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 2.0" loading="lazy">
+        <img class="responsive-img" 
+            src="assets/cfg_2.0_satellite_1_generated.png"  
+            alt="CFG 2.0" 
+            loading="lazy">
         <figcaption>CFG = 2.0</figcaption>
       </figure>
+
       <figure>
-        <img id="tgm_3" src="assets/cfg_4.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 4.0" loading="lazy">
+        <img class="responsive-img" 
+            src="assets/cfg_4.0_satellite_1_generated.png"  
+            alt="CFG 4.0" 
+            loading="lazy">
         <figcaption>CFG = 4.0</figcaption>
       </figure>
+
       <figure>
-        <img id="tgm_4" src="assets/cfg_8.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 8.0" loading="lazy">
+        <img class="responsive-img" 
+            src="assets/cfg_8.0_satellite_1_generated.png"  
+            alt="CFG 8.0" 
+            loading="lazy">
         <figcaption>CFG = 8.0</figcaption>
       </figure>
+
       <figure>
-        <img id="tgm_5" src="assets/cfg_16.0_satellite_1_generated.png" width="1000" alt="Thermal map generated with CFG 16.0" loading="lazy">
+        <img class="responsive-img" 
+            src="assets/cfg_16.0_satellite_1_generated.png" 
+            alt="CFG 16.0" 
+            loading="lazy">
         <figcaption>CFG = 16.0</figcaption>
       </figure>
     </div>
