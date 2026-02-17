@@ -40,6 +40,76 @@
   <script src="./static/js/index.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
+  <style>
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .results-table th {
+      background-color: #3273dc;
+      color: white;
+      padding: 0.6rem 0.5rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .results-table td {
+      padding: 0.5rem;
+      text-align: center;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .results-table tbody tr:hover {
+      background-color: #f0f4ff;
+    }
+
+    .results-table .best {
+      font-weight: 700;
+      color: #3273dc;
+    }
+
+    .results-table .second {
+      text-decoration: underline;
+    }
+
+    .results-table .ours-row {
+      background-color: #eef3ff;
+      font-weight: 600;
+    }
+
+    .results-table .ours-row:hover {
+      background-color: #e0ebff;
+    }
+
+    .results-table .method-col {
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .results-table .category-col {
+      text-align: left;
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.is-active {
+      display: block;
+    }
+
+    .hf-icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      display: inline-block;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -106,9 +176,10 @@
             </div>
 
             <div class="is-size-6 publication-authors">
-              <span class="author-block"><sup>1</sup>New York University</a>,
-                <sup>2</sup>Technology Innovation Institute</a>,
-                <sup>3</sup>University of California, Berkeley</a>
+              <span class="author-block"><sup>1</sup>New York University,
+                <sup>2</sup>Technology Innovation Institute,
+                <sup>3</sup>University of California, Berkeley
+              </span>
             </div>
 
             <div class="column has-text-centered">
@@ -133,7 +204,7 @@
                 <a href="https://huggingface.co/datasets/xjh19972/ThermalGen-Dataset"
                   class="external-link button is-normal">
                   <span class="icon">
-                    <i class="fa fa-face-smiling-hands"></i>
+                    <img class="hf-icon" src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="HuggingFace">
                   </span>
                   <span>HF Dataset</span>
                 </a>
@@ -142,7 +213,7 @@
                 <a href="https://huggingface.co/collections/xjh19972/thermalgen-models-68d863b498a89060c05fae2f"
                   class="external-link button is-normal">
                   <span class="icon">
-                    <i class="fa fa-face-smiling-hands"></i>
+                    <img class="hf-icon" src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="HuggingFace">
                   </span>
                   <span>HF Model</span>
                 </a>
@@ -219,6 +290,7 @@
           </div>
         </div>
       </div>
+    </div>
   </section>
 
   <section class="section">
@@ -248,8 +320,8 @@
           <h2 class="title is-3">Satellite-Thermal Paired Datasets</h2>
           <div class="content has-text-justified">
             <p>
-              Apart from our previous Boson-night dataset, we release addtional datasets: DJI-day, Bosonplus-day,
-              Bosonplus-night.
+              Apart from our previous Boson-night dataset, we release additional datasets: DJI-day, Bosonplus-day,
+              and Bosonplus-night. Each dataset illustrates differences in thermal sensors, lighting conditions, and geography. Columns show paired satellite RGB and corresponding 8-bit thermal images.
             </p>
           </div>
 
@@ -300,6 +372,484 @@
               loading="lazy">
             <figcaption>Bosonplus-night</figcaption>
           </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Method Overview -->
+  <section class="section">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Method Overview</h2>
+        <div class="content has-text-justified">
+          <p>
+            ThermalGen is built on a flow-based generative paradigm with a Scalable Interpolant Transformer (SiT) backbone.
+            It models the conditional distribution of thermal images given an RGB image and a dataset-specific style embedding.
+            The style-disentangled mechanism uses learnable embeddings that capture diverse RGB-T mapping relationships
+            influenced by thermal sensor characteristics, camera viewpoints, and environmental conditions.
+            Classifier-Free Guidance (CFG) is supported through an unconditional style embedding, enabling flexible control
+            over the generation style at inference time.
+          </p>
+        </div>
+        <figure>
+          <img src="assets/ThermalGen_architecture.png" width="900" alt="ThermalGen Architecture Overview" loading="lazy">
+          <figcaption>
+            <strong>Overview of ThermalGen.</strong> Paired RGB-T data from satellite-aerial, aerial, and ground datasets are used for training.
+            The generative model predicts the velocity for the thermal latent, conditioned on timestep <em>t</em>,
+            dataset-specific style embedding <strong>y</strong>, and RGB latent <strong>z<sub>RGB</sub></strong>.
+            After <em>T</em> steps of denoising, the thermal decoder generates the final thermal image.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quantitative Results -->
+  <section class="hero is-light">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-full">
+            <h2 class="title is-3">Quantitative Results</h2>
+            <p class="subtitle is-6" style="margin-top: -0.5rem; color: #666;">
+              Comparison with GAN-based and diffusion-based baselines across nine RGB-T benchmarks.
+              All ThermalGen results use a single jointly-trained model.
+            </p>
+          </div>
+        </div>
+
+        <div class="columns is-centered">
+          <div class="column is-full">
+            <!-- Tabs -->
+            <div class="tabs is-centered is-boxed" id="results-tabs">
+              <ul>
+                <li class="is-active" data-target="tab-satellite"><a>Satellite-Aerial</a></li>
+                <li data-target="tab-aerial"><a>Aerial</a></li>
+                <li data-target="tab-ground"><a>Ground</a></li>
+              </ul>
+            </div>
+
+            <!-- Satellite-Aerial Table -->
+            <div id="tab-satellite" class="tab-content is-active">
+              <div class="table-container">
+                <table class="results-table">
+                  <thead>
+                    <tr>
+                      <th rowspan="2">Method</th>
+                      <th rowspan="2">Category</th>
+                      <th colspan="4">Boson-night</th>
+                      <th colspan="4">Bosonplus-day</th>
+                      <th colspan="4">Bosonplus-night</th>
+                    </tr>
+                    <tr>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="method-col">Pix2Pix</td><td class="category-col">Paired GAN</td>
+                      <td class="second">23.71</td><td class="second">0.79</td><td>149.55</td><td class="second">0.31</td>
+                      <td class="second">14.04</td><td class="second">0.30</td><td class="second">170.45</td><td class="second">0.44</td>
+                      <td class="second">19.93</td><td>0.70</td><td>137.74</td><td>0.40</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">CycleGAN</td><td class="category-col">Unpaired GAN</td>
+                      <td>17.27</td><td>0.50</td><td class="second">119.62</td><td>0.42</td>
+                      <td>12.62</td><td>0.21</td><td>279.16</td><td>0.52</td>
+                      <td>11.36</td><td>0.47</td><td>105.36</td><td>0.48</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">Pix2PixHD</td><td class="category-col">Paired GAN</td>
+                      <td>21.46</td><td class="second">0.75</td><td class="best">106.33</td><td class="best">0.26</td>
+                      <td>12.85</td><td>0.21</td><td class="second">157.65</td><td class="second">0.43</td>
+                      <td>16.79</td><td>0.71</td><td class="second">89.26</td><td class="second">0.35</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">VQGAN</td><td class="category-col">Paired GAN</td>
+                      <td class="best">24.55</td><td class="best">0.81</td><td>207.12</td><td class="second">0.29</td>
+                      <td class="second">14.10</td><td class="second">0.28</td><td>185.41</td><td>0.46</td>
+                      <td class="second">18.49</td><td class="best">0.76</td><td>286.74</td><td class="best">0.33</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">DDIM</td><td class="category-col">Paired Diffusion</td>
+                      <td>18.31</td><td>0.72</td><td>203.05</td><td>0.50</td>
+                      <td>12.50</td><td>0.20</td><td>261.03</td><td>0.71</td>
+                      <td>15.22</td><td class="second">0.72</td><td>112.38</td><td>0.49</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">BBDM</td><td class="category-col">Paired Diffusion</td>
+                      <td>17.85</td><td>0.62</td><td>141.27</td><td>0.37</td>
+                      <td>12.42</td><td>0.18</td><td>137.68</td><td>0.46</td>
+                      <td>13.88</td><td>0.62</td><td>101.08</td><td>0.43</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">DiffV2IR</td><td class="category-col">Paired Diffusion</td>
+                      <td>15.47</td><td>0.50</td><td>150.11</td><td>0.47</td>
+                      <td>11.01</td><td>0.17</td><td>215.20</td><td>0.59</td>
+                      <td>13.76</td><td>0.55</td><td>96.42</td><td>0.50</td>
+                    </tr>
+                    <tr class="ours-row">
+                      <td class="method-col">ThermalGen-L/2</td><td class="category-col">Paired Flow</td>
+                      <td class="second">21.88</td><td>0.71</td><td>161.22</td><td>0.32</td>
+                      <td class="best">14.66</td><td class="best">0.31</td><td class="best">76.91</td><td class="best">0.35</td>
+                      <td class="best">20.47</td><td class="best">0.76</td><td class="second">75.80</td><td class="second">0.34</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Aerial Table -->
+            <div id="tab-aerial" class="tab-content">
+              <div class="table-container">
+                <table class="results-table">
+                  <thead>
+                    <tr>
+                      <th rowspan="2">Method</th>
+                      <th rowspan="2">Category</th>
+                      <th colspan="4">LLVIP</th>
+                      <th colspan="4">NII-CU</th>
+                      <th colspan="4">AVIID</th>
+                    </tr>
+                    <tr>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="method-col">Pix2Pix</td><td class="category-col">Paired GAN</td>
+                      <td class="second">12.09</td><td>0.37</td><td>326.14</td><td>0.53</td>
+                      <td>17.31</td><td class="second">0.81</td><td>168.77</td><td class="second">0.37</td>
+                      <td class="second">21.41</td><td class="second">0.61</td><td>146.26</td><td>0.30</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">CycleGAN</td><td class="category-col">Unpaired GAN</td>
+                      <td>10.39</td><td>0.24</td><td>227.15</td><td>0.61</td>
+                      <td>16.43</td><td>0.77</td><td>125.37</td><td class="second">0.37</td>
+                      <td>15.54</td><td>0.46</td><td class="second">91.37</td><td>0.32</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">Pix2PixHD</td><td class="category-col">Paired GAN</td>
+                      <td>11.51</td><td>0.33</td><td>281.89</td><td>0.51</td>
+                      <td class="second">19.46</td><td>0.80</td><td class="second">118.60</td><td>0.32</td>
+                      <td>20.01</td><td>0.56</td><td>127.63</td><td>0.27</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">VQGAN</td><td class="category-col">Paired GAN</td>
+                      <td>11.75</td><td>0.36</td><td>273.06</td><td>0.58</td>
+                      <td>15.53</td><td class="second">0.81</td><td>173.37</td><td class="second">0.37</td>
+                      <td class="second">21.71</td><td class="second">0.60</td><td>96.46</td><td class="second">0.23</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">DDIM</td><td class="category-col">Paired Diffusion</td>
+                      <td>10.94</td><td class="second">0.41</td><td>297.26</td><td>0.71</td>
+                      <td class="second">17.79</td><td>0.77</td><td>180.14</td><td>0.48</td>
+                      <td>10.96</td><td>0.36</td><td>290.46</td><td>0.76</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">BBDM</td><td class="category-col">Paired Diffusion</td>
+                      <td>9.98</td><td>0.22</td><td>313.54</td><td>0.67</td>
+                      <td>14.36</td><td>0.71</td><td class="second">118.59</td><td>0.42</td>
+                      <td>18.53</td><td>0.49</td><td>141.06</td><td>0.31</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">DiffV2IR&dagger;</td><td class="category-col">Paired Diffusion</td>
+                      <td class="best">22.17</td><td class="best">0.77</td><td class="best">50.10</td><td class="best">0.11</td>
+                      <td>12.28</td><td>0.63</td><td>159.99</td><td>0.50</td>
+                      <td>18.17</td><td>0.53</td><td class="second">51.61</td><td class="second">0.21</td>
+                    </tr>
+                    <tr class="ours-row">
+                      <td class="method-col">ThermalGen-L/2</td><td class="category-col">Paired Flow</td>
+                      <td>11.12</td><td>0.34</td><td>238.60</td><td>0.51</td>
+                      <td class="best">26.44</td><td class="best">0.92</td><td class="best">69.30</td><td class="best">0.21</td>
+                      <td class="best">24.89</td><td class="best">0.75</td><td class="best">29.05</td><td class="best">0.13</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="has-text-centered" style="margin-top: 0.5rem; color: #666; font-size: 0.85rem;">
+                &dagger; DiffV2IR uses LLVIP test set for training.
+              </p>
+            </div>
+
+            <!-- Ground Table -->
+            <div id="tab-ground" class="tab-content">
+              <div class="table-container">
+                <table class="results-table">
+                  <thead>
+                    <tr>
+                      <th rowspan="2">Method</th>
+                      <th rowspan="2">Category</th>
+                      <th colspan="4">M&sup3;FD</th>
+                      <th colspan="4">MSRS</th>
+                      <th colspan="4">FLIR</th>
+                    </tr>
+                    <tr>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                      <th>PSNR&uarr;</th><th>SSIM&uarr;</th><th>FID&darr;</th><th>LPIPS&darr;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="method-col">Pix2Pix</td><td class="category-col">Paired GAN</td>
+                      <td class="second">21.10</td><td class="second">0.72</td><td>127.62</td><td>0.34</td>
+                      <td class="second">21.78</td><td class="second">0.68</td><td>174.81</td><td>0.37</td>
+                      <td class="second">17.13</td><td class="second">0.54</td><td>224.11</td><td>0.44</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">CycleGAN</td><td class="category-col">Unpaired GAN</td>
+                      <td>11.28</td><td>0.42</td><td>171.37</td><td>0.56</td>
+                      <td>11.42</td><td>0.35</td><td class="second">99.14</td><td>0.53</td>
+                      <td>11.15</td><td>0.32</td><td>137.97</td><td>0.49</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">Pix2PixHD</td><td class="category-col">Paired GAN</td>
+                      <td>19.37</td><td>0.67</td><td>112.31</td><td>0.28</td>
+                      <td>18.21</td><td>0.61</td><td>121.05</td><td class="second">0.35</td>
+                      <td>15.63</td><td>0.49</td><td>164.53</td><td>0.37</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">VQGAN</td><td class="category-col">Paired GAN</td>
+                      <td>21.02</td><td>0.71</td><td>79.21</td><td class="second">0.26</td>
+                      <td class="second">22.27</td><td class="second">0.69</td><td>106.51</td><td>0.38</td>
+                      <td>16.95</td><td>0.50</td><td>141.00</td><td>0.40</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">DDIM</td><td class="category-col">Paired Diffusion</td>
+                      <td>11.15</td><td>0.45</td><td>229.24</td><td>0.70</td>
+                      <td>7.35</td><td>0.21</td><td>262.93</td><td>0.79</td>
+                      <td>11.24</td><td>0.39</td><td>296.81</td><td>0.71</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">BBDM</td><td class="category-col">Paired Diffusion</td>
+                      <td>17.26</td><td>0.61</td><td>120.79</td><td>0.37</td>
+                      <td>20.27</td><td>0.62</td><td>145.86</td><td>0.37</td>
+                      <td>16.10</td><td>0.45</td><td>177.81</td><td>0.42</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">DiffV2IR*</td><td class="category-col">Paired Diffusion</td>
+                      <td class="second">22.76</td><td class="second">0.79</td><td class="second">37.74</td><td class="best">0.13</td>
+                      <td>10.16</td><td>0.30</td><td>104.01</td><td>0.57</td>
+                      <td>11.29</td><td>0.44</td><td>106.12</td><td>0.45</td>
+                    </tr>
+                    <tr>
+                      <td class="method-col">DiffV2IR+</td><td class="category-col">Paired Diffusion</td>
+                      <td>12.68</td><td>0.45</td><td>78.45</td><td>0.43</td>
+                      <td>6.80</td><td>0.17</td><td>113.26</td><td>0.64</td>
+                      <td class="best">22.39</td><td class="best">0.57</td><td class="best">37.83</td><td class="best">0.18</td>
+                    </tr>
+                    <tr class="ours-row">
+                      <td class="method-col">ThermalGen-L/2</td><td class="category-col">Paired Flow</td>
+                      <td class="best">23.73</td><td class="best">0.81</td><td class="best">35.82</td><td class="second">0.14</td>
+                      <td class="best">24.38</td><td class="best">0.76</td><td class="best">52.31</td><td class="best">0.21</td>
+                      <td>17.10</td><td class="second">0.52</td><td class="second">70.09</td><td class="second">0.33</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="has-text-centered" style="margin-top: 0.5rem; color: #666; font-size: 0.85rem;">
+                * Fine-tuned on M&sup3;FD; + Fine-tuned on FLIR.
+              </p>
+            </div>
+
+            <p class="has-text-centered" style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+              <span class="best">Blue bold</span> = best result.
+              <span class="second">Underlined</span> = second/third best.
+              <span style="background-color: #eef3ff; padding: 0.1rem 0.4rem; border-radius: 3px; font-weight: 600;">Highlighted row</span>
+              = our method (single jointly-trained model).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qualitative Results -->
+  <section class="section">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Qualitative Comparison</h2>
+        <div class="content has-text-justified" style="max-width: 900px; margin: 0 auto;">
+          <p>
+            Visual comparisons across ground, aerial, and satellite-aerial datasets. GAN-based methods produce distorted or grid-artifact-laden outputs,
+            while DiffV2IR tends to generate excessively sharp boundaries. ThermalGen produces high-fidelity thermal images accurately matching
+            ground truth distributions across diverse conditions.
+          </p>
+        </div>
+
+        <style>
+          .vis-grid { display: grid; gap: 2px; margin-bottom: 0.75rem; }
+          .vis-grid img { width: 100%; height: auto; display: block; }
+          .vis-grid-8 { grid-template-columns: repeat(8, 1fr); max-width: 1000px; margin: 0 auto; }
+          .vis-label { font-size: 0.75rem; color: #333; font-weight: 600; padding: 2px 0; text-align: center; }
+          .vis-row-label { font-size: 0.7rem; color: #555; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; padding-right: 4px; }
+        </style>
+
+        <!-- Header row -->
+        <div class="vis-grid vis-grid-8" style="margin-bottom: 0;">
+          <div class="vis-label">Input</div>
+          <div class="vis-label">Pix2Pix</div>
+          <div class="vis-label">CycleGAN</div>
+          <div class="vis-label">Pix2PixHD</div>
+          <div class="vis-label">VQGAN</div>
+          <div class="vis-label">DiffV2IR</div>
+          <div class="vis-label" style="color: #d32f2f; font-weight: 700;">ThermalGen</div>
+          <div class="vis-label">GT</div>
+        </div>
+
+        <!-- Freiburg Day -->
+        <p class="vis-label" style="margin-bottom: 2px; font-size: 0.8rem;"><em>Freiburg Day (Ground)</em></p>
+        <div class="vis-grid vis-grid-8">
+          <img src="assets/vis/Freiburg_day/day_input.png" alt="Input" loading="lazy">
+          <img src="assets/vis/Freiburg_day/day_pix2pix.png" alt="Pix2Pix" loading="lazy">
+          <img src="assets/vis/Freiburg_day/day_cyclegan.png" alt="CycleGAN" loading="lazy">
+          <img src="assets/vis/Freiburg_day/day_pix2pixhd.png" alt="Pix2PixHD" loading="lazy">
+          <img src="assets/vis/Freiburg_day/day_vqgan.png" alt="VQGAN" loading="lazy">
+          <img src="assets/vis/Freiburg_day/day_p2.png" alt="DiffV2IR" loading="lazy">
+          <img src="assets/vis/Freiburg_day/day_concat.png" alt="ThermalGen" loading="lazy" style="outline: 2px solid #d32f2f;">
+          <img src="assets/vis/Freiburg_day/day_gt.png" alt="GT" loading="lazy">
+        </div>
+
+        <!-- Freiburg Night -->
+        <p class="vis-label" style="margin-bottom: 2px; font-size: 0.8rem;"><em>Freiburg Night (Ground)</em></p>
+        <div class="vis-grid vis-grid-8">
+          <img src="assets/vis/Freiburg_night/night_input.png" alt="Input" loading="lazy">
+          <img src="assets/vis/Freiburg_night/night_pix2pix.png" alt="Pix2Pix" loading="lazy">
+          <img src="assets/vis/Freiburg_night/night_cyclegan.png" alt="CycleGAN" loading="lazy">
+          <img src="assets/vis/Freiburg_night/night_pix2pixhd.png" alt="Pix2PixHD" loading="lazy">
+          <img src="assets/vis/Freiburg_night/night_vqgan.png" alt="VQGAN" loading="lazy">
+          <img src="assets/vis/Freiburg_night/night_p2.png" alt="DiffV2IR" loading="lazy">
+          <img src="assets/vis/Freiburg_night/night_concat.png" alt="ThermalGen" loading="lazy" style="outline: 2px solid #d32f2f;">
+          <img src="assets/vis/Freiburg_night/night_gt.png" alt="GT" loading="lazy">
+        </div>
+
+        <!-- M3FD -->
+        <p class="vis-label" style="margin-bottom: 2px; font-size: 0.8rem;"><em>M&sup3;FD (Ground)</em></p>
+        <div class="vis-grid vis-grid-8">
+          <img src="assets/vis/m3fd/tardal_input.png" alt="Input" loading="lazy">
+          <img src="assets/vis/m3fd/tardal_pix2pix.png" alt="Pix2Pix" loading="lazy">
+          <img src="assets/vis/m3fd/tardal_cyclegan.png" alt="CycleGAN" loading="lazy">
+          <img src="assets/vis/m3fd/tardal_pix2pixhd.png" alt="Pix2PixHD" loading="lazy">
+          <img src="assets/vis/m3fd/tardal_vqgan.png" alt="VQGAN" loading="lazy">
+          <img src="assets/vis/m3fd/tardal_p2.png" alt="DiffV2IR" loading="lazy">
+          <img src="assets/vis/m3fd/tardal_concat.png" alt="ThermalGen" loading="lazy" style="outline: 2px solid #d32f2f;">
+          <img src="assets/vis/m3fd/tardal_gt.png" alt="GT" loading="lazy">
+        </div>
+
+        <!-- MSRS -->
+        <p class="vis-label" style="margin-bottom: 2px; font-size: 0.8rem;"><em>MSRS (Ground)</em></p>
+        <div class="vis-grid vis-grid-8">
+          <img src="assets/vis/msrs/msrs_input.png" alt="Input" loading="lazy">
+          <img src="assets/vis/msrs/msrs_pix2pix.png" alt="Pix2Pix" loading="lazy">
+          <img src="assets/vis/msrs/msrs_cyclegan.png" alt="CycleGAN" loading="lazy">
+          <img src="assets/vis/msrs/msrs_pix2pixhd.png" alt="Pix2PixHD" loading="lazy">
+          <img src="assets/vis/msrs/msrs_vqgan.png" alt="VQGAN" loading="lazy">
+          <img src="assets/vis/msrs/msrs_p2.png" alt="DiffV2IR" loading="lazy">
+          <img src="assets/vis/msrs/msrs_concat.png" alt="ThermalGen" loading="lazy" style="outline: 2px solid #d32f2f;">
+          <img src="assets/vis/msrs/msrs_gt.png" alt="GT" loading="lazy">
+        </div>
+
+        <!-- AVIID -->
+        <p class="vis-label" style="margin-bottom: 2px; font-size: 0.8rem;"><em>AVIID (Aerial)</em></p>
+        <div class="vis-grid vis-grid-8">
+          <img src="assets/vis/aviid/aviid_input.png" alt="Input" loading="lazy">
+          <img src="assets/vis/aviid/aviid_pix2pix.png" alt="Pix2Pix" loading="lazy">
+          <img src="assets/vis/aviid/aviid_cyclegan.png" alt="CycleGAN" loading="lazy">
+          <img src="assets/vis/aviid/aviid_pix2pixhd.png" alt="Pix2PixHD" loading="lazy">
+          <img src="assets/vis/aviid/aviid_vqgan.png" alt="VQGAN" loading="lazy">
+          <img src="assets/vis/aviid/aviid_p2.png" alt="DiffV2IR" loading="lazy">
+          <img src="assets/vis/aviid/aviid_concat.png" alt="ThermalGen" loading="lazy" style="outline: 2px solid #d32f2f;">
+          <img src="assets/vis/aviid/aviid_gt.png" alt="GT" loading="lazy">
+        </div>
+
+        <!-- NII-CU -->
+        <p class="vis-label" style="margin-bottom: 2px; font-size: 0.8rem;"><em>NII-CU (Aerial)</em></p>
+        <div class="vis-grid vis-grid-8">
+          <img src="assets/vis/niicu/niicu_input.png" alt="Input" loading="lazy">
+          <img src="assets/vis/niicu/niicu_pix2pix.png" alt="Pix2Pix" loading="lazy">
+          <img src="assets/vis/niicu/niicu_cyclegan.png" alt="CycleGAN" loading="lazy">
+          <img src="assets/vis/niicu/niicu_pix2pixhd.png" alt="Pix2PixHD" loading="lazy">
+          <img src="assets/vis/niicu/niicu_vqgan.png" alt="VQGAN" loading="lazy">
+          <img src="assets/vis/niicu/niicu_p2.png" alt="DiffV2IR" loading="lazy">
+          <img src="assets/vis/niicu/niicu_concat.png" alt="ThermalGen" loading="lazy" style="outline: 2px solid #d32f2f;">
+          <img src="assets/vis/niicu/niicu_gt.png" alt="GT" loading="lazy">
+        </div>
+
+        <!-- Bosonplus-day -->
+        <p class="vis-label" style="margin-bottom: 2px; font-size: 0.8rem;"><em>Bosonplus-day (Satellite-Aerial)</em></p>
+        <div class="vis-grid vis-grid-8">
+          <img src="assets/vis/bosonplus_day/boson_day_input.png" alt="Input" loading="lazy">
+          <img src="assets/vis/bosonplus_day/boson_day_pix2pix.png" alt="Pix2Pix" loading="lazy">
+          <img src="assets/vis/bosonplus_day/boson_day_cyclegan.png" alt="CycleGAN" loading="lazy">
+          <img src="assets/vis/bosonplus_day/boson_day_pix2pixhd.png" alt="Pix2PixHD" loading="lazy">
+          <img src="assets/vis/bosonplus_day/boson_day_vqgan.png" alt="VQGAN" loading="lazy">
+          <img src="assets/vis/bosonplus_day/boson_day_p2.png" alt="DiffV2IR" loading="lazy">
+          <img src="assets/vis/bosonplus_day/boson_day_concat.png" alt="ThermalGen" loading="lazy" style="outline: 2px solid #d32f2f;">
+          <img src="assets/vis/bosonplus_day/boson_day_gt.png" alt="GT" loading="lazy">
+        </div>
+
+        <!-- Bosonplus-night -->
+        <p class="vis-label" style="margin-bottom: 2px; font-size: 0.8rem;"><em>Bosonplus-night (Satellite-Aerial)</em></p>
+        <div class="vis-grid vis-grid-8">
+          <img src="assets/vis/bosonplus_night/boson_night_input.png" alt="Input" loading="lazy">
+          <img src="assets/vis/bosonplus_night/boson_night_pix2pix.png" alt="Pix2Pix" loading="lazy">
+          <img src="assets/vis/bosonplus_night/boson_night_cyclegan.png" alt="CycleGAN" loading="lazy">
+          <img src="assets/vis/bosonplus_night/boson_night_pix2pixhd.png" alt="Pix2PixHD" loading="lazy">
+          <img src="assets/vis/bosonplus_night/boson_night_vqgan.png" alt="VQGAN" loading="lazy">
+          <img src="assets/vis/bosonplus_night/boson_night_p2.png" alt="DiffV2IR" loading="lazy">
+          <img src="assets/vis/bosonplus_night/boson_night_concat.png" alt="ThermalGen" loading="lazy" style="outline: 2px solid #d32f2f;">
+          <img src="assets/vis/bosonplus_night/boson_night_gt.png" alt="GT" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- t-SNE Style Disentanglement -->
+  <section class="hero is-light">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Style Disentanglement Analysis</h2>
+          <div class="content has-text-justified">
+            <p>
+              t-SNE visualizations of DINOv2 features demonstrate that ThermalGen's style embeddings effectively capture
+              distinct RGB-T mapping relationships across different conditions. The generated thermal images cluster
+              closely with their corresponding ground truth distributions, confirming that the style-disentangled mechanism
+              successfully encodes variations in viewpoints, sensor types, day-night conditions, and lighting environments.
+            </p>
+          </div>
+          <div class="columns is-multiline is-centered">
+            <div class="column is-half">
+              <figure>
+                <img src="assets/tsne/tsne_visualization_daynight.png" alt="Day-Night t-SNE" loading="lazy" style="max-width: 100%;">
+                <figcaption>Day vs. Night</figcaption>
+              </figure>
+            </div>
+            <div class="column is-half">
+              <figure>
+                <img src="assets/tsne/tsne_visualization_sensor.png" alt="Sensor t-SNE" loading="lazy" style="max-width: 100%;">
+                <figcaption>Sensor Variation</figcaption>
+              </figure>
+            </div>
+            <div class="column is-half">
+              <figure>
+                <img src="assets/tsne/tsne_visualization_viewpoint.png" alt="Viewpoint t-SNE" loading="lazy" style="max-width: 100%;">
+                <figcaption>Viewpoint Variation</figcaption>
+              </figure>
+            </div>
+            <div class="column is-half">
+              <figure>
+                <img src="assets/tsne/tsne_visualization_colored_llvip.png" alt="LLVIP t-SNE" loading="lazy" style="max-width: 100%;">
+                <figcaption>LLVIP Train/Test Distribution</figcaption>
+              </figure>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -538,6 +1088,21 @@
       </div>
     </div>
   </footer>
+
+  <!-- Tab switching script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabs = document.querySelectorAll('#results-tabs li');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('is-active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('is-active'));
+          tab.classList.add('is-active');
+          document.getElementById(tab.dataset.target).classList.add('is-active');
+        });
+      });
+    });
+  </script>
 
 </body>
 
